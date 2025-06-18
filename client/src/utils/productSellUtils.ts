@@ -1,12 +1,18 @@
 // .\src\utils\productSellUtils.ts
 /**
- * 將金額格式化為台幣顯示
- * @param amount 金額數字
- * @returns 格式化後的金額字串
- */
+ * 將金額格式化為台幣顯示 (整數格式)
+ * @param amount 金額數字
+ * @returns 格式化後的金額字串，例如 "NT$1,360"
+ */
 export const formatCurrency = (amount: number | undefined): string => {
-  if (amount === undefined || isNaN(amount)) return 'N/A';
-  return amount.toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' });
+  if (amount === undefined || isNaN(amount)) return 'N/A';
+  
+  // 使用 Math.round() 確保是整數，並在 toLocaleString 選項中設定不顯示小數位
+  return Math.round(amount).toLocaleString('zh-TW', { 
+    style: 'currency', 
+    currency: 'TWD',
+    maximumFractionDigits: 0 
+  });
 };
 
 /**

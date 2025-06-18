@@ -56,10 +56,19 @@ export interface ProductSellData {
 // 獲取所有產品及庫存
 export const getAllProducts = async (): Promise<Product[]> => {
     try {
-        console.log("獲取產品列表...");
         const response = await axios.get(`${API_URL}/products`);
-        console.log("產品列表API響應:", response.data);
-        return response.data;
+        if (Array.isArray(response.data)) {
+            // 新增 map 來統一資料格式
+            const formattedData = response.data.map((p: any) => ({
+                product_id: p.product_id,
+                product_name: p.product_name || p.name, // 兼容 name 和 product_name
+                product_price: p.product_price || p.price, // 兼容 price 和 product_price
+                inventory_id: p.inventory_id || 0, // 提供預設值
+                quantity: p.quantity || 0, // 提供預設值
+            }));
+            return formattedData;
+        }
+        return []; // 如果返回的不是陣列，返回空陣列
     } catch (error) {
         console.error("獲取產品列表失敗：", error);
         throw error;

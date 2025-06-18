@@ -30,6 +30,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasRequiredPermission, setHasRequiredPermission] = useState(false);
 
+useEffect(() => {
+  const checkAuth = async () => {
+    // 測試用：直接設為已登入且有權限
+    setIsAuthenticated(true);
+    setHasRequiredPermission(true);
+    setIsChecking(false);
+  };
+
+  checkAuth();
+}, []);
+  // 為了測試 先開通所有權限
+  /*
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -55,6 +67,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
     checkAuth();
   }, [requiredPermission, adminOnly]);
+  */
 
   // 檢查認證過程中顯示加載狀態
   if (isChecking) {

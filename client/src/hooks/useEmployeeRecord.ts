@@ -1,3 +1,4 @@
+// client/src/hooks/useEmployeeRecord.ts
 import { useState, useEffect } from "react";
 import {
   getAllEmployeeRecords,

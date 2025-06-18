@@ -54,6 +54,12 @@ import BranchBackend from "./pages/backend/BranchBackend";
 import Staff from "./pages/backend/Staff";
 import AddStaff from "./pages/backend/AddStaff";
 
+// 帳務管理
+import FinanceDashboard from './pages/finance/FinanceDashboard'; 
+import AddSalesOrder from './pages/finance/AddSalesOrder';     
+import ItemSelection from './pages/finance/ItemSelection';
+import SalesOrderList from './pages/finance/SalesOrderList';
+
 // 匯入Component
 import Sidebar from "./components/Siderbar/Sidebar";
 
@@ -138,6 +144,16 @@ const App: React.FC = () => {
                     <Route path="/health-data-analysis/stress-test/add/page2" element={<ProtectedRoute element={<AddStressTestPage2 />} />} />
                     <Route path="/health-data-analysis/pure-medical-record" element={<ProtectedRoute element={<HealthRecord />} />} />
                     <Route path="/health-data-analysis/add-pure-medical-record" element={<ProtectedRoute element={<AddPureMedicalRecord />} />} />
+
+                    {/* 帳務管理 */}
+                    <Route path="/finance" element={<FinanceDashboard />} />
+                    <Route path="/finance/sales/list" element={<SalesOrderList />} />
+                    <Route path="/finance/sales/add" element={<AddSalesOrder />} />
+                    <Route path="/finance/item-selection" element={<ItemSelection />} />
+                    {/* 未來修改銷售單的路由 */}
+                    {/* <Route path="/finance/sales/edit/:orderId" element={<EditSalesOrder />} /> */}
+                    {/* ... */}
+
                 </Routes>
             </div>
         </div>

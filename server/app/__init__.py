@@ -10,12 +10,13 @@ from app.routes.inventory import inventory_bp
 from app.routes.health_check import health_check_bp
 from app.routes.staff import staff_bp
 from app.routes.pure_medical_record import pure_medical_bp
+from .routes.sales_order_routes import sales_order_bp
 
 def create_app():
     app = Flask(__name__)
 
     # 設定 CORS，允許所有來源的跨域請求
-    CORS(app)
+    CORS(app, supports_credentials=True)
 
     # 添加全局特定的 CORS 處理中間件
     @app.after_request
@@ -79,6 +80,9 @@ def create_app():
     
     # 註冊淨化健康紀錄路由
     app.register_blueprint(pure_medical_bp, url_prefix='/api/pure-medical-record')
+
+    # 銷售單路由
+    app.register_blueprint(sales_order_bp)
 
     # 添加根路徑的處理函數
     @app.route('/', methods=['GET', 'OPTIONS'])

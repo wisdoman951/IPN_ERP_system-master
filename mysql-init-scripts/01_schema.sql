@@ -270,3 +270,41 @@ CREATE TABLE product_sell (
   FOREIGN KEY (`store_id`) REFERENCES `store`(`store_id`),
   FOREIGN KEY (`product_id`) REFERENCES `product`(`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `sales_orders` (
+  `order_id` INT NOT NULL AUTO_INCREMENT,
+  `order_number` VARCHAR(50) NOT NULL UNIQUE, -- 銷售單號，例如 "SO-20250613-001"
+  `order_date` DATE NOT NULL,                 -- 銷售日期
+  `member_id` INT,                            -- 購買人 (關聯 member 表)，允許 NULL
+  `staff_id` INT,                             -- 銷售人員 (關聯 staff 表)，允許 NULL
+  `store_id` INT NOT NULL,                    -- 銷售單位 (關聯 store 表)
+  `subtotal` DECIMAL(12, 2) NOT NULL,         -- 項目小計總和 (折扣前)
+  `total_discount` DECIMAL(12, 2) DEFAULT 0.00, -- 整筆訂單的總折價金額
+  `grand_total` DECIMAL(12, 2) NOT NULL,      -- 最終總金額 (應收金額)
+  `sale_category` VARCHAR(50),                -- 銷售列別
+  `note` TEXT,                                -- 備註
+  PRIMARY KEY (`order_id`),
+  FOREIGN KEY (`member_id`) REFERENCES `member`(`member_id`) ON DELETE SET NULL,
+  FOREIGN KEY (`staff_id`) REFERENCES `staff`(`staff_id`) ON DELETE SET NULL,
+  FOREIGN KEY (`store_id`) REFERENCES `store`(`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 銷售單項目明細表 (Sales Order Items)
+CREATE TABLE `sales_order_items` (
+  `item_id` INT NOT NULL AUTO_INCREMENT,
+  `order_id` INT NOT NULL,              -- 關聯到 sales_orders 表
+  `product_id` INT,                       -- 關聯到 product 表 (如果是產品)
+  `therapy_id` INT,                       -- 關聯到 therapy 表 (如果是療程)
+  `item_description` VARCHAR(255) NOT NULL, -- 產品或療程名稱
+  `item_type` ENUM('Product', 'Therapy') NOT NULL, -- 項目類型
+  `unit` VARCHAR(20),                         -- 單位
+  `unit_price` DECIMAL(10, 2) NOT NULL,     -- 單價
+  `quantity` INT NOT NULL,                  -- 數量 (對應療程的堂數)
+  `subtotal` DECIMAL(12, 2) NOT NULL,       -- 小計 (單價 * 數量)
+  `category` VARCHAR(50),                 -- 分類
+  `note` TEXT,                            -- 單項備註
+  PRIMARY KEY (`item_id`),
+  FOREIGN KEY (`order_id`) REFERENCES `sales_orders`(`order_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `product`(`product_id`),
+  FOREIGN KEY (`therapy_id`) REFERENCES `therapy`(`therapy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
